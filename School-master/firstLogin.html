@@ -8,7 +8,7 @@
 
     <style>
         body{background-image: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%); }
-        .lg-container{width:300px;height:420px;padding:30px 30px;margin:130px auto;position: relative;background-color:#E5E5E5;box-shadow: 1px 1px 8px 3px #C7C7C7;
+        .lg-container{width:320px;height:420px;padding:30px 30px;margin:130px auto;position: relative;background-color:#E5E5E5;box-shadow: 1px 1px 8px 3px #C7C7C7;
     		position: absolute;margin:auto;left: 0; right: 0;top: 0;bottom: 0;}
         input{display: block;width: 270px;height:40px;text-align: left;font-size: 20px;margin:50px;box-shadow:2px #757476 inset;margin:20px;border-radius:5px;outline: none;border: none;box-shadow: 1px 1px 8px 3px #C7C7C7;padding-left:10px }
         label{width: 270px;height:40px;font-size: 20px;}
@@ -21,31 +21,76 @@
 	        -o-transition: 1.5s all;}
     </style>
     <script>
-        var lgform=document.getElementById("lg-form");
-        var password=document.getElementById("password");
-        var newPassword=document.getElementById("newpassword");
-        var email=document.getElementById("email");
-        var verEmail = /^([\w-+=_]+(?:\.[\w-+=_]+)*)@(?!163.com$|sina.com$)((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
-        window.onload=function(){
-            if(password.value=="" || password.value==null){
-                // showPwd.style.display = "block";
-                tip.style.display="block";
-                return false;
-            }else if(newPassword.value=="" || newPassword.value==null){
-                showNewPwd.style.display = "block";
-                return false;
-            }else if(password.value!=newPassword.value){
-                showNewPwd.style.display = "block";
-                password.value="";
-                newPassword.value="";
-                return false;
-            }else if(!verEmail.test(email)){
-                showEmail.style.display = "block";
-            }else{
-                return true;
+        // var lgform=document.getElementById("lg-form");
+        // var password=document.getElementById("password");
+        // var newPassword=document.getElementById("newpassword");
+        // var email=document.getElementById("email");
+        // var verEmail = /^([\w-+=_]+(?:\.[\w-+=_]+)*)@(?!163.com$|sina.com$)((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+        // window.onload=function(){
+        //     if(password.value=="" || password.value==null){
+        //         // showPwd.style.display = "block";
+        //         tip.style.display="block";
+        //         return false;
+        //     }else if(newPassword.value=="" || newPassword.value==null){
+        //         showNewPwd.style.display = "block";
+        //         return false;
+        //     }else if(password.value!=newPassword.value){
+        //         showNewPwd.style.display = "block";
+        //         password.value="";
+        //         newPassword.value="";
+        //         return false;
+        //     }else if(!verEmail.test(email)){
+        //         showEmail.style.display = "block";
+        //     }else{
+        //         return true;
+        //     }
+        // }
+        window.onload = function () {
+            var tip = document.getElementsByClassName("tip");
+            var showPwd = document.getElementById("showPwd");
+            var showNewPwd = document.getElementById("showNewPwd");
+            var showEmail = document.getElementById("showEmail");
+
+            var password=document.getElementById("password");
+            var newPassword=document.getElementById("newpassword");
+            var email=document.getElementById("email");
+             
+            password.onfocus = function () {
+                showPwd.style.display = "none";
+            }
+            newpassword.onfocus = function () {
+                showNewPwd.style.display = "none";
+            }
+            email.onfocus = function () {
+                showEmail.style.display = "none";
+            }
+            password.onblur = function () {
+                var verPwd = /^[a-z0-9]{8,16}$/;
+                if (verPwd.test(this.value)) {
+                    showPwd.style.display = "none";
+                }
+                else {
+                    showPwd.style.display = "block";
+                }
+            }
+            newPassword.onblur = function () {
+                if (password.value == newPassword.value) {
+                    showNewPwd.style.display = "none";
+                }
+                else {
+                    showNewPwd.style.display = "block";
+                }
+            }
+            email.onblur = function () {
+                var verEmail = /^([\w-+=_]+(?:\.[\w-+=_]+)*)@(?!163.com$|sina.com$)((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+                if (verEmail.test(this.value)) {
+                    showEmail.style.display = "none";
+                }
+                else {
+                    showEmail.style.display = "block";
+                }
             }
         }
-        
     </script>
         
 </head>
@@ -55,19 +100,21 @@
       
             <div>
                 <label for="pwdId">新密码：</label>
-                <input type="password" name="password" id="password" placeholder="新密码"/></a>
-                <p class="tip showPwd" id="showPwd">请输入新密码</p>
+                <input type="password" name="password" id="password" autofocus="autofocus" required="required" placeholder="新密码"/>
+                <p class="tip" id="showPwd">密码必须为8~16位的字母或数字</p>
             </div>
       
             <div>
                 <label for="newPwdId"  style="float:left">确认密码：</label>
-                <input type="password" name="newPassword" id="newpassword" placeholder="确认密码" />
-                <p class="tip showNewPwd" id="showNewPwd">两次密码不一样</p>
+                <input type="password" name="newPassword" id="newpassword" autofocus="autofocus" required="required" placeholder="确认密码" />
+                <p class="tip" id="showNewPwd">两次密码不一致</p>
             </div>
             <div>
                 <label for="email"  style="float:left">绑定邮箱：</label>
+                <!-- <input type="email" name="email" id="email" placeholder="邮箱" autocomplete="on" autofocus="autofocus" required="required"/> -->
                 <input type="email" name="email" id="email" placeholder="邮箱" autocomplete="on" autofocus="autofocus" required="required"/>
-                <p class="tip showEmail" id="showEmail">请输入正确的邮箱</p>
+                
+                <p class="tip" id="showEmail">请输入正确的邮箱</p>
             </div>
 
             <div>
